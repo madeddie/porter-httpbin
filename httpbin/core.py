@@ -379,6 +379,25 @@ def view_get():
     return jsonify(get_dict("url", "args", "headers", "origin"))
 
 
+@app.route("/head", methods=("HEAD",))
+def view_head():
+    """The request's headers
+    ---
+    tags:
+      - HTTP Methods
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Echoes the request's headers as response headers (with an X-Echo- prefix).
+    """
+
+    response = jsonify(get_dict("headers"))
+    for key, value in request.headers.items():
+        response.headers.add('X-Echo-%s' % key, value)
+    return response
+
+
 @app.route("/anything", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE"])
 @app.route(
     "/anything/<path:anything>",
