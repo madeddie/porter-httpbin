@@ -11,7 +11,7 @@ Flask = "*"
 werkzeug = ">=0.14.1"
 six = "*"
 flasgger = "*"
-pyyaml = {git = "https://github.com/yaml/pyyaml.git"}
+pyyaml = "*"
 
 [dev-packages]
 rope = "*"
