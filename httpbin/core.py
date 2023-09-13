@@ -1306,7 +1306,7 @@ def drip():
     return response
 
 
-@app.route("/base64/<value>")
+@app.route("/base64/<value>", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE"])
 def decode_base64(value):
     """Decodes base64url-encoded string.
     ---
