@@ -398,10 +398,10 @@ def view_head():
     return response
 
 
-@app.route("/anything", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE"])
+@app.route("/anything", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE", "PURGE"])
 @app.route(
     "/anything/<path:anything>",
-    methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE"],
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE", "PURGE"],
 )
 def view_anything(anything=None):
     """Returns anything passed in request data.
