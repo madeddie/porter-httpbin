@@ -1,10 +1,15 @@
 httpbin+zon Changelog
 =====================
 
-0.9.2+zon.5 (unreleased)
+0.9.2+zon.6 (unreleased)
 ------------------------
 
 - Nothing changed yet
+
+0.9.2+zon.5 (2024-03-15)
+------------------------
+
+- Allow overriding content-type header in /response-headers
 
 0.9.2+zon.4 (2023-10-04)
 ------------------------
