@@ -1,22 +1,13 @@
-FROM python:3.8-slim
+FROM python:3.12-slim as base
+LABEL org.opencontainers.image.name=europe-west3-docker.pkg.dev/zeitonline-engineering/docker-zon/httpbin
+WORKDIR /app
 
-LABEL name="httpbin"
-LABEL version="0.9.2"
-LABEL description="A simple HTTP service."
-LABEL org.kennethreitz.vendor="Kenneth Reitz"
+COPY requirements.txt .
+RUN pip install --no-cache-dir --no-deps -r requirements.txt
 
-ENV LC_ALL=C.UTF-8
-ENV LANG=C.UTF-8
+FROM base as production
+COPY httpbin httpbin
+COPY setup.py .
+RUN pip install --no-cache-dir --no-deps -e .
 
-RUN pip3 install --no-cache-dir pipenv
-
-ADD Pipfile Pipfile.lock /httpbin/
-WORKDIR /httpbin
-RUN /bin/bash -c "pip3 install --no-cache-dir -r <(pipenv lock -r)"
-
-ADD . /httpbin
-RUN pip3 install --no-cache-dir /httpbin
-
-EXPOSE 80
-
-CMD ["gunicorn", "-b", "0.0.0.0:80", "httpbin:app", "-k", "gevent"]
+ENTRYPOINT ["python", "-m", "gunicorn", "-b", "0.0.0.0:80", "httpbin:app", "-k", "gevent"]

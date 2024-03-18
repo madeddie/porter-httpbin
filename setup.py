@@ -38,4 +38,5 @@ setup(
         'Flask', 'MarkupSafe', 'decorator', 'itsdangerous', 'six', 'brotlipy',
         'raven[flask]', 'werkzeug>=2.1', 'gevent', 'flasgger'
     ],
+    extras_require={'deploy': ['gunicorn']}
 )
