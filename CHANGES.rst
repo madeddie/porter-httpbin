@@ -1,10 +1,16 @@
 httpbin+zon Changelog
 =====================
 
-0.9.2+zon.6 (unreleased)
+0.9.2+zon.7 (unreleased)
 ------------------------
 
 - Nothing changed yet
+
+0.9.2+zon.6 (2024-03-18)
+------------------------
+
+- Use static HTML body for /response-headers instead of json representation
+  of the configured headers. (To provide some "data mass" for e.g. testing gzip)
 
 0.9.2+zon.5 (2024-03-15)
 ------------------------

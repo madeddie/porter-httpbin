@@ -820,7 +820,7 @@ def response_headers():
     # Pending swaggerUI update
     # https://github.com/swagger-api/swagger-ui/issues/3850
     headers = MultiDict(request.args.items(multi=True))
-    response = Response(json.dumps(list(headers.lists())))
+    response = Response(render_template("moby.html"))
     response.headers.clear()  # Remove built-in content-type and -length
     for key, value in headers.items(multi=True):
         response.headers.add(key, value)
