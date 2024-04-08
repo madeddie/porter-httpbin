@@ -22,7 +22,7 @@ jsonschema-specifications==2023.12.1  # via jsonschema
 markupsafe==2.1.5         # via httpbin (setup.py), jinja2, werkzeug
 mistune==3.0.2            # via flasgger
 packaging==24.0           # via flasgger, gunicorn
-pycparser==2.21           # via cffi
+pycparser==2.22           # via cffi
 pyyaml==6.0.1             # via flasgger
 raven==6.10.0             # via httpbin (setup.py)
 referencing==0.34.0       # via jsonschema, jsonschema-specifications
