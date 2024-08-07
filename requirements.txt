@@ -23,7 +23,7 @@ markupsafe==2.1.5         # via httpbin (setup.py), jinja2, werkzeug
 mistune==3.0.2            # via flasgger
 packaging==24.1           # via flasgger, gunicorn
 pycparser==2.22           # via cffi
-pyyaml==6.0.1             # via flasgger
+pyyaml==6.0.2             # via flasgger
 raven==6.10.0             # via httpbin (setup.py)
 referencing==0.35.1       # via jsonschema, jsonschema-specifications
 rpds-py==0.20.0           # via jsonschema, referencing
