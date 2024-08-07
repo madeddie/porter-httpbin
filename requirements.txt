@@ -4,7 +4,7 @@
 #
 #    pip-compile --annotation-style=line --extra=deploy --output-file=requirements.txt --strip-extras setup.py
 #
-attrs==23.2.0             # via jsonschema, referencing
+attrs==24.2.0             # via jsonschema, referencing
 blinker==1.8.2            # via flask, raven
 brotlipy==0.7.0           # via httpbin (setup.py)
 cffi==1.17.0              # via brotlipy
