@@ -12,14 +12,14 @@ click==8.1.7              # via flask
 decorator==5.1.1          # via httpbin (setup.py)
 flasgger==0.9.7.1         # via httpbin (setup.py)
 flask==3.0.3              # via flasgger, httpbin (setup.py), raven
-gevent==24.10.2            # via httpbin (setup.py)
+gevent==24.10.3            # via httpbin (setup.py)
 greenlet==3.1.1           # via gevent
 gunicorn==23.0.0          # via httpbin (setup.py)
 itsdangerous==2.2.0       # via flask, httpbin (setup.py)
 jinja2==3.1.4             # via flask
 jsonschema==4.23.0        # via flasgger
 jsonschema-specifications==2023.12.1  # via jsonschema
-markupsafe==3.0.1         # via httpbin (setup.py), jinja2, werkzeug
+markupsafe==3.0.2         # via httpbin (setup.py), jinja2, werkzeug
 mistune==3.0.2            # via flasgger
 packaging==24.1           # via flasgger, gunicorn
 pycparser==2.22           # via cffi
