@@ -30,7 +30,7 @@ rpds-py==0.21.0           # via jsonschema, referencing
 six==1.16.0               # via flasgger, httpbin (setup.py)
 werkzeug==3.0.6           # via flask, httpbin (setup.py)
 zope-event==5.0           # via gevent
-zope-interface==7.1.1       # via gevent
+zope-interface==7.2       # via gevent
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
