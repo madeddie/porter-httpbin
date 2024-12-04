@@ -26,7 +26,7 @@ pycparser==2.22           # via cffi
 pyyaml==6.0.2             # via flasgger
 raven==6.10.0             # via httpbin (setup.py)
 referencing==0.35.1       # via jsonschema, jsonschema-specifications
-rpds-py==0.21.0           # via jsonschema, referencing
+rpds-py==0.22.1           # via jsonschema, referencing
 six==1.16.0               # via flasgger, httpbin (setup.py)
 werkzeug==3.0.6           # via flask, httpbin (setup.py)
 zope-event==5.0           # via gevent
