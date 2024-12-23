@@ -1,5 +1,5 @@
 kind: Deployment
-appVersion: apps/v1
+apiVersion: apps/v1
 metadata:
   name: app
   labels:
@@ -33,7 +33,7 @@ spec:
             memory: "50M"
 ---
 kind: Service
-appVersion: v1
+apiVersion: v1
 metadata:
   name: app
   labels:
