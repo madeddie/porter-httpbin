@@ -1,0 +1,37 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "dependencyDashboard": true,
+    "commitMessagePrefix": "MAINT: ",
+    "prHourlyLimit": 2,
+    "schedule": [
+        "before 8am on wednesday"
+    ],
+    "enabledManagers": [
+        "dockerfile",
+        "github-actions",
+        "pip_requirements"
+    ],
+    "packageRules": [
+        {
+            "groupName": "All minor python changes",
+            "matchManagers": [
+                "pip_requirements"
+            ],
+            "matchUpdateTypes": [
+                "minor",
+                "patch"
+            ]
+        },
+        {
+            "groupName": "All minor github-actions changes",
+            "matchManagers": [
+                "github-actions"
+            ],
+            "matchUpdateTypes": [
+                "minor",
+                "patch"
+            ],
+            "automerge": true
+        }
+    ]
+}
