@@ -1,0 +1,23 @@
+name: Testrunner
+
+on:
+  pull_request:
+  workflow_call:  # triggered by ./release.yaml
+
+jobs:
+  test:
+    name: Test Run
+    runs-on: zon-ubuntu-general-dind
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+    - uses: ZeitOnline/gh-action-baseproject@aef7d211670835e83fa026279a4cc240c83e99c2 # v0.11.0
+      id: baseproject
+      with:
+        project_name: httpbin
+        environment: production
+        setup_buildx: true
+    - run: bin/test
