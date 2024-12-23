@@ -1,0 +1,45 @@
+kind: Deployment
+appVersion: apps/v1
+metadata:
+  name: app
+  labels:
+    app: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+
+    spec:
+      containers:
+      - name: app
+        image: europe-west3-docker.pkg.dev/zeitonline-engineering/docker-zon/httpbin
+
+        ports:
+        - containerPort: 8080
+
+        readinessProbe:
+          httpGet:
+            path: /status/200
+            port: 8080
+
+        resources:
+          requests:
+            cpu: "0.01"
+            memory: "50M"
+---
+kind: Service
+appVersion: v1
+metadata:
+  name: app
+  labels:
+    app: app
+spec:
+  selector:
+    app: app
+  ports:
+  - port: 8080

@@ -1,0 +1,23 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: app
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: "nginx-fastly"
+  rules:
+  - host: httpbin.ops.zeit.de
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: app
+            port:
+              number: 8080
+  tls:
+  - hosts:
+    - httpbin.ops.zeit.de
+    secretName: tls-cert

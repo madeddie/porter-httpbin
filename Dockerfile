@@ -13,4 +13,4 @@ COPY httpbin httpbin
 COPY setup.py .
 RUN pip install --no-cache-dir --no-deps -e .
 
-ENTRYPOINT ["python", "-m", "gunicorn", "-b", "0.0.0.0:80", "httpbin:app", "-k", "gevent"]
+ENTRYPOINT ["python", "-m", "gunicorn", "-b", "0.0.0.0:8080", "httpbin:app", "-k", "gevent"]
