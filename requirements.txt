@@ -8,12 +8,12 @@ attrs==25.3.0             # via jsonschema, referencing
 blinker==1.9.0            # via flask, raven
 brotlipy==0.7.0           # via httpbin (setup.py)
 cffi==1.17.1              # via brotlipy
-click==8.1.8              # via flask
+click==8.2.0              # via flask
 decorator==5.2.1          # via httpbin (setup.py)
 flasgger==0.9.7.1         # via httpbin (setup.py)
-flask==3.1.0              # via flasgger, httpbin (setup.py), raven
-gevent==25.4.2            # via httpbin (setup.py)
-greenlet==3.2.1           # via gevent
+flask==3.1.1              # via flasgger, httpbin (setup.py), raven
+gevent==25.5.1            # via httpbin (setup.py)
+greenlet==3.2.2           # via gevent
 gunicorn==23.0.0          # via httpbin (setup.py)
 itsdangerous==2.2.0       # via flask, httpbin (setup.py)
 jinja2==3.1.6             # via flask
