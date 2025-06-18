@@ -6,4 +6,4 @@ resources:
 
 images:
 - name: europe-west3-docker.pkg.dev/zeitonline-engineering/docker-zon/httpbin
-  newTag: f1313d964590dd78a0c77336d1f3c17303464061
+  newTag: 465980bb9c2368c09986eaf04d47996037687e3e
