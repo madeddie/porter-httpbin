@@ -1,4 +1,4 @@
-FROM python:3.13-slim@sha256:d8130429ac8488cd869c7e7710e733aedc87bdd0d4bf816af831925c74b86e3f AS base
+FROM python:3.13-slim@sha256:6544e0e002b40ae0f59bc3618b07c1e48064c4faed3a15ae2fbd2e8f663e8283 AS base
 LABEL org.opencontainers.image.name=europe-west3-docker.pkg.dev/zeitonline-engineering/docker-zon/httpbin
 WORKDIR /app
 
