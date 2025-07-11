@@ -19,8 +19,8 @@ else
     opts='--quiet'
 fi
 docker buildx build --output type=docker $opts \
-       --target testing --tag $image $ROOT
+       --tag $image $ROOT
 docker run --rm ${interactive} \
-       --volume $ROOT:/app \
+       --volume $ROOT/test_httpbin.py:/app/test_httpbin.py \
        --entrypoint python \
        $image test_httpbin.py "$@"

@@ -4,11 +4,6 @@ WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir --no-deps -r requirements.txt
-
-FROM base AS testing
-ENV PYTHONDONTWRITEBYTECODE=1
-
-FROM base AS production
 COPY httpbin httpbin
 COPY setup.py .
 RUN pip install --no-cache-dir --no-deps -e .

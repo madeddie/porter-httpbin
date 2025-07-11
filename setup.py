@@ -3,12 +3,9 @@ import os
 import io
 
 
-with open(os.path.join(os.path.realpath(os.path.dirname(__file__)), 'httpbin', 'VERSION')) as version_file:
-    version = version_file.read().strip()
-
 setup(
     name="httpbin",
-    version=version,
+    version='0.9.2+zon.7',
     description="HTTP Request and Response Service",
     long_description="A simple HTTP Request & Response Service, written in Python + Flask.",
 
