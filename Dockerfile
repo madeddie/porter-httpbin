@@ -9,6 +9,11 @@ ENV UV_NO_MANAGED_PYTHON=1 \
     UV_INDEX_PYPI_ZON_USERNAME="oauth2accesstoken"
 
 WORKDIR /app
+RUN groupadd --gid=10000 app && \
+    useradd --uid=10000 --gid=app --no-user-group \
+    --create-home --home-dir /app app && \
+    chown -R app:app /app
+USER app
 RUN uv venv --allow-existing /app
 ENV PATH=/app/bin:$PATH \
     UV_PROJECT_ENVIRONMENT=/app
