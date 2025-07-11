@@ -37,6 +37,8 @@ jobs:
           tags: ${{secrets.GAR_DOCKER_REGISTRY}}/${{env.project}}:${{github.sha}}
           push: true
           cache-from: type=gha
+          secrets: |
+            GCLOUD_TOKEN=${{steps.baseproject.outputs.gcloud_access_token}}
 
       - name: Set image version
         run: |

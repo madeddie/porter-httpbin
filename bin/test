@@ -5,6 +5,8 @@ if [[ -n "$CI" ]]; then set -x; fi
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT="$(dirname $DIR)"
 
+source $DIR/configure-artifact-registry-auth
+
 if [[ -t 1 ]]; then
     interactive='-it'
 else
@@ -18,7 +20,7 @@ if [[ -n "$CI" ]]; then
 else
     opts='--quiet'
 fi
-docker buildx build --output type=docker $opts \
+docker buildx build --output type=docker $opts $DOCKER_OPTS_PYPI_ZON \
        --tag $image $ROOT
 docker run --rm ${interactive} \
        --volume $ROOT/test_httpbin.py:/app/test_httpbin.py \

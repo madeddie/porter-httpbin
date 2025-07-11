@@ -20,4 +20,5 @@ jobs:
         project_name: httpbin
         environment: production
         setup_buildx: true
+        google_auth: true
     - run: bin/test

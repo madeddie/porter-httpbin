@@ -5,7 +5,8 @@ COPY --from=ghcr.io/astral-sh/uv:0.7.19@sha256:2dcbc74e60ed6d842122ed538f5267c80
 ENV UV_NO_MANAGED_PYTHON=1 \
     UV_NO_CACHE=1 \
     UV_COMPILE_BYTECODE=1 \
-    UV_FROZEN=1
+    UV_FROZEN=1 \
+    UV_INDEX_PYPI_ZON_USERNAME="oauth2accesstoken"
 
 WORKDIR /app
 RUN uv venv --allow-existing /app
@@ -14,6 +15,7 @@ ENV PATH=/app/bin:$PATH \
 
 COPY pyproject.toml uv.lock ./
 COPY httpbin httpbin
-RUN uv sync --group deploy
+RUN --mount=type=secret,id=GCLOUD_TOKEN,env=UV_INDEX_PYPI_ZON_PASSWORD \
+    uv sync --group deploy
 
 ENTRYPOINT ["python", "-m", "gunicorn", "-b", "0.0.0.0:8080", "httpbin:app", "-k", "gevent"]
