@@ -31,6 +31,21 @@ spec:
           requests:
             cpu: "0.01"
             memory: "50M"
+
+        securityContext:
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - "ALL"
+
+        volumeMounts:
+        - mountPath: /tmp  # to support readOnlyRootFilesystem
+          name: tmp
+
+    volumes:
+    - name: tmp
+      emptyDir:
+        medium: Memory
 ---
 kind: Service
 apiVersion: v1

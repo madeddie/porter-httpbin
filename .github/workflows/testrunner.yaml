@@ -4,6 +4,9 @@ on:
   pull_request:
   workflow_call:  # triggered by ./release.yaml
 
+env:
+  project: httpbin
+
 jobs:
   test:
     name: Test Run
@@ -17,8 +20,13 @@ jobs:
     - uses: ZeitOnline/gh-action-baseproject@4743a3673ac263f36b4d2206eb4342c4c44a38e6 # v0.12.0
       id: baseproject
       with:
-        project_name: httpbin
+        project_name: ${{env.project}}
         environment: production
         setup_buildx: true
         google_auth: true
     - run: bin/test
+
+    - uses: ZeitOnline/sysdig-scan-action@bb519dd81d03633da2083b26a58afa9753783d67 # v1.1.0
+      with:
+        gha_vault_role: ${{steps.baseproject.outputs.gha_vault_role}}
+        image_tag: ${{secrets.GAR_DOCKER_REGISTRY}}/${{env.project}}:testing
