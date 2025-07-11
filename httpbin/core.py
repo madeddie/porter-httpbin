@@ -8,6 +8,7 @@ This module provides the core HttpBin experience.
 """
 
 import base64
+import importlib.metadata
 import json
 import os
 import random
@@ -51,10 +52,7 @@ from .helpers import (
 from .utils import weighted_choice
 from .structures import CaseInsensitiveDict
 
-with open(
-    os.path.join(os.path.realpath(os.path.dirname(__file__)), "VERSION")
-) as version_file:
-    version = version_file.read().strip()
+version = importlib.metadata.version('httpbin')
 
 ENV_COOKIES = (
     "_gauges_unique",
