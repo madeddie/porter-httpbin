@@ -46,15 +46,3 @@ spec:
       - name: tmp
         emptyDir:
           medium: Memory
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: app
-  labels:
-    app: app
-spec:
-  selector:
-    app: app
-  ports:
-  - port: 8080

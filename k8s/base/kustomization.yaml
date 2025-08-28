@@ -3,4 +3,6 @@ kind: Kustomization
 
 resources:
 - deployment.yaml
+- service.yaml
 - ingress.yaml
+- gateway.yaml
