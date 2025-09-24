@@ -86,14 +86,14 @@ wheels = [
 
 [[package]]
 name = "click"
-version = "8.2.2"
+version = "8.3.0"
 source = { registry = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/simple/" }
 dependencies = [
     { name = "colorama", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/click/click-8.2.2.tar.gz", hash = "sha256:068616e6ef9705a07b6db727cb9c248f4eb9dae437a30239f56fa94b18b852ef" }
+sdist = { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/click/click-8.3.0.tar.gz", hash = "sha256:e7b8232224eba16f4ebe410c25ced9f7875cb5f3263ffc93cc3e8da705e229c4" }
 wheels = [
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/click/click-8.2.2-py3-none-any.whl", hash = "sha256:52e1e9f5d3db8c85aa76968c7c67ed41ddbacb167f43201511c8fd61eb5ba2ca" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/click/click-8.3.0-py3-none-any.whl", hash = "sha256:9b9f285302c6e3064f4330c05f05b81945b2a39544279343e6e7c5f27a9baddc" },
 ]
 
 [[package]]
@@ -147,7 +147,7 @@ wheels = [
 
 [[package]]
 name = "gevent"
-version = "25.8.2"
+version = "25.9.1"
 source = { registry = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/simple/" }
 dependencies = [
     { name = "cffi", marker = "platform_python_implementation == 'CPython' and sys_platform == 'win32'" },
@@ -155,24 +155,24 @@ dependencies = [
     { name = "zope-event" },
     { name = "zope-interface" },
 ]
-sdist = { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2.tar.gz", hash = "sha256:0cfab118ad5dcc55d7847dd9dccd560d9015fe671f42714b6f1ac97e3b2b9a3a" }
+sdist = { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1.tar.gz", hash = "sha256:adf9cd552de44a4e6754c51ff2e78d9193b7fa6eab123db9578a210e657235dd" }
 wheels = [
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp313-cp313-macosx_11_0_universal2.whl", hash = "sha256:a30373121527feff642a7528bf674eb7b1d3cb343d6b2b3eb42e7ea76288d8f0" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:c70ee82f417d1c94db3eb3fd2d14bfa6995a61b88f66005a69a169ad1df55b59" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp313-cp313-manylinux2014_ppc64le.manylinux_2_17_ppc64le.whl", hash = "sha256:6a1399407299c710f5fe9348cda3f16e6d6fd6e592098d8bb678d58393b5457d" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp313-cp313-manylinux2014_s390x.manylinux_2_17_s390x.whl", hash = "sha256:6513e872a365acb407c7a13e11112bbfe8b9d6f0cc138182b50ce9f4074a1f2f" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:e7d586a041f13b661dbe25137d6659fe246b1b454d0c5c29be26a3d8d4ed96cf" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:07717cb293684185bd5190b876d897dd8ed11d6eb707264a0541bc36a6b06ba3" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:14e3ece38dcb24209a5b05dcc7ba5544514943bb7841bc5152c395c69e7ffbdc" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp313-cp313-win_amd64.whl", hash = "sha256:791fb76294b79d5b0271b1be088d5dfb37506b7a8f4315ff939cae32b46be905" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp314-cp314-macosx_11_0_universal2.whl", hash = "sha256:2776417181b27466b562bc47af5d20a55e2ccd4deec06a96f37e58317e1c8525" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:9b795ea9727d873387483df4ffd31137c4859746c9c789238db483a28bfa16de" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp314-cp314-manylinux2014_ppc64le.manylinux_2_17_ppc64le.whl", hash = "sha256:98a4302cb64c3fbc1f7472b051ac79e68b3d41f9d37a08a0fc6058461079dedf" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp314-cp314-manylinux2014_s390x.manylinux_2_17_s390x.whl", hash = "sha256:5c4a99ac674d8c13459e03dcb5550a4a3639a9bd1dcda12a630ffdd1fae8d9f8" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:398dc7adbcd8cf1fcb2dc8dc48aafc355790bff842c906a28b9f995bcc061bd2" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp314-cp314-musllinux_1_2_aarch64.whl", hash = "sha256:3535a699771f35b460026077dec946e73e4744afb5661b4e05a78eea74c120ce" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:23383d4e50718750f44cabdf1f8d4905108da0ffc6a8bf85448fb0a68f0e1b4d" },
-    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.8.2-cp314-cp314-win_amd64.whl", hash = "sha256:28a60e5f1174ac568639ab3bd12be9d620478a35acf0ad3156ef117918b4f551" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp313-cp313-macosx_11_0_universal2.whl", hash = "sha256:4f84591d13845ee31c13f44bdf6bd6c3dbf385b5af98b2f25ec328213775f2ed" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:9cdbb24c276a2d0110ad5c978e49daf620b153719ac8a548ce1250a7eb1b9245" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp313-cp313-manylinux2014_ppc64le.manylinux_2_17_ppc64le.whl", hash = "sha256:88b6c07169468af631dcf0fdd3658f9246d6822cc51461d43f7c44f28b0abb82" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp313-cp313-manylinux2014_s390x.manylinux_2_17_s390x.whl", hash = "sha256:b7bb0e29a7b3e6ca9bed2394aa820244069982c36dc30b70eb1004dd67851a48" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:2951bb070c0ee37b632ac9134e4fdaad70d2e660c931bb792983a0837fe5b7d7" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:e4e17c2d57e9a42e25f2a73d297b22b60b2470a74be5a515b36c984e1a246d47" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:8d94936f8f8b23d9de2251798fcb603b84f083fdf0d7f427183c1828fb64f117" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp313-cp313-win_amd64.whl", hash = "sha256:eb51c5f9537b07da673258b4832f6635014fee31690c3f0944d34741b69f92fa" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp314-cp314-macosx_11_0_universal2.whl", hash = "sha256:1a3fe4ea1c312dbf6b375b416925036fe79a40054e6bf6248ee46526ea628be1" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:0adb937f13e5fb90cca2edf66d8d7e99d62a299687400ce2edee3f3504009356" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp314-cp314-manylinux2014_ppc64le.manylinux_2_17_ppc64le.whl", hash = "sha256:427f869a2050a4202d93cf7fd6ab5cffb06d3e9113c10c967b6e2a0d45237cb8" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp314-cp314-manylinux2014_s390x.manylinux_2_17_s390x.whl", hash = "sha256:c049880175e8c93124188f9d926af0a62826a3b81aa6d3074928345f8238279e" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:b5a67a0974ad9f24721034d1e008856111e0535f1541499f72a733a73d658d1c" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp314-cp314-musllinux_1_2_aarch64.whl", hash = "sha256:1d0f5d8d73f97e24ea8d24d8be0f51e0cf7c54b8021c1fddb580bf239474690f" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:ddd3ff26e5c4240d3fbf5516c2d9d5f2a998ef87cfb73e1429cfaeaaec860fa6" },
+    { url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/gevent/gevent-25.9.1-cp314-cp314-win_amd64.whl", hash = "sha256:bb63c0d6cb9950cc94036a4995b9cc4667b8915366613449236970f4394f94d7" },
 ]
 
 [[package]]
