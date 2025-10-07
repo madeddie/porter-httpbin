@@ -8,7 +8,7 @@ spec:
   selector:
     app: app
   ports:
-  - port: 8080
+    - port: 8080
 ---
 apiVersion: networking.gke.io/v1
 kind: HealthCheckPolicy

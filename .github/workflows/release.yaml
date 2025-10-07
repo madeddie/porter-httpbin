@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
   push:
     branches:
-    - main
+      - main
     paths-ignore:
-    - k8s/**
+      - k8s/**
 
 env:
   project: httpbin
@@ -46,4 +46,3 @@ jobs:
           kustomize edit set image "project:${{github.sha}}"
           git commit -am "Release image version ${{github.sha}}"
           git push
-
