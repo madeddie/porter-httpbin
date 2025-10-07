@@ -8,7 +8,20 @@ env:
   project: httpbin
 
 jobs:
+  linter:
+    uses: zeitonline/gh-action-workflows/.github/workflows/pre-commit.yaml@760bbe3225e275a3ec819fe5fb9aa481f225b7a0 # v2.6.1
+    with:
+      python-version: "3.13"
+      node-version: "24"
+  k8s:
+    uses: zeitonline/gh-action-workflows/.github/workflows/k8s-validation.yaml@46b696216ed1e1e4b945cfacb2f7f2a27e3e2a78 # v2.4.2
+
+
   test:
+    needs:
+      - linter
+      - k8s
+
     name: Test Run
     runs-on: zon-ubuntu-general-dind
     permissions:
