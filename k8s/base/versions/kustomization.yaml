@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+images:
+- name: project
+  newTag: 38127c4bcfd5cd87d297badf52ac2f3694a9cac1
