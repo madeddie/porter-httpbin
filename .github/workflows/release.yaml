@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
   push:
     branches:
-    - main
+      - main
     paths-ignore:
-    - k8s/**
+      - k8s/**
 
 env:
   project: httpbin
@@ -42,8 +42,7 @@ jobs:
 
       - name: Set image version
         run: |
-          cd k8s/production
-          kustomize edit set image ${{secrets.GAR_DOCKER_REGISTRY}}/${{env.project}}:${{github.sha}}
+          cd k8s/base/versions
+          kustomize edit set image "project:${{github.sha}}"
           git commit -am "Release image version ${{github.sha}}"
           git push
-

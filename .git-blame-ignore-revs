@@ -1,0 +1,5 @@
+# You can configure git to automatically use this file with the following config:
+# git config --global blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Auto-format yaml
+c6c8170c5ba126de677da650c323fca5219a4655

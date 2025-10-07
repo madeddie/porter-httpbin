@@ -4,14 +4,14 @@ metadata:
   name: app
 spec:
   parentRefs:
-  - kind: Gateway
-    name: https-lb-fastly-gateway
-    namespace: cluster-infra-https-lb-fastly
+    - kind: Gateway
+      name: https-lb-fastly-gateway
+      namespace: cluster-infra-https-lb-fastly
   rules:
-  - matches:
-    - headers:
-      - name: x-zon-service
-        value: httpbin/app
-    backendRefs:
-    - name: app
-      port: 8080
+    - matches:
+        - headers:
+            - name: x-zon-service
+              value: httpbin/app
+      backendRefs:
+        - name: app
+          port: 8080

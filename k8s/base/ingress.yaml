@@ -7,17 +7,17 @@ metadata:
 spec:
   ingressClassName: "nginx-fastly"
   rules:
-  - host: httpbin.ops.zeit.de
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: app
-            port:
-              number: 8080
+    - host: httpbin.ops.zeit.de
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: app
+                port:
+                  number: 8080
   tls:
-  - hosts:
-    - httpbin.ops.zeit.de
-    secretName: tls-cert
+    - hosts:
+        - httpbin.ops.zeit.de
+      secretName: tls-cert
