@@ -1,6 +1,6 @@
 [project]
 name = "httpbin"
-version = "0.9.2+zon.7"
+version = "0.9.2+zon.8"
 description="HTTP Request and Response Service"
 urls = {repository="https://github.com/requests/httpbin"}
 authors = [{name="Kenneth Reitz", email="me@kennethreitz.org"}]
