@@ -1,0 +1,12 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+  - repo: https://github.com/rbubley/mirrors-prettier # non-official package because pre-commit archived the official one
+    rev: v3.6.2
+    hooks:
+      - id: prettier
+        types_or: [yaml]
+        # `kustomize edit` uses its own, conflicting formatter
+        exclude: "k8s/base/versions/kustomization.yaml"

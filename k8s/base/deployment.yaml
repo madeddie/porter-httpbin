@@ -1,0 +1,48 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: app
+  labels:
+    app: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+
+    spec:
+      containers:
+        - name: app
+          image: project
+
+          ports:
+            - containerPort: 8080
+
+          readinessProbe:
+            httpGet:
+              path: /status/200
+              port: 8080
+
+          resources:
+            requests:
+              cpu: "0.01"
+              memory: "50M"
+
+          securityContext:
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - "ALL"
+
+          volumeMounts:
+            - mountPath: /tmp # to support readOnlyRootFilesystem
+              name: tmp
+
+      volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory

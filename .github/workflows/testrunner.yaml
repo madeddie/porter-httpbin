@@ -1,0 +1,44 @@
+name: Testrunner
+
+on:
+  pull_request:
+  workflow_call: # triggered by ./release.yaml
+
+env:
+  project: httpbin
+
+jobs:
+  linter:
+    uses: zeitonline/gh-action-workflows/.github/workflows/pre-commit.yaml@ce2752f66fb61ff521cc8279d8cd0429a7eba2eb # 2.8.0
+    with:
+      python-version: "3.13"
+      node-version: "24"
+  k8s:
+    uses: zeitonline/gh-action-workflows/.github/workflows/k8s-validation.yaml@ce2752f66fb61ff521cc8279d8cd0429a7eba2eb # 2.8.0
+
+  test:
+    needs:
+      - linter
+      - k8s
+
+    name: Test Run
+    runs-on: zon-ubuntu-general-dind
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: ZeitOnline/gh-action-baseproject@4a35b6f8614aab8320249d6778ed6d2edd4a40c3 # v0.13.0
+        id: baseproject
+        with:
+          project_name: ${{env.project}}
+          environment: production
+          setup_buildx: true
+          google_auth: true
+      - run: bin/test
+
+      - uses: ZeitOnline/sysdig-scan-action@6ce72f92e0cb5c80ff798ec3807ee2d829c70b64 # v1.2.0
+        with:
+          gha_vault_role: ${{steps.baseproject.outputs.gha_vault_role}}
+          image_tag: ${{secrets.GAR_DOCKER_REGISTRY}}/${{env.project}}:testing

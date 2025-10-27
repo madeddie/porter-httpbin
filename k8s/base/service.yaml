@@ -1,0 +1,41 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: app
+  labels:
+    app: app
+spec:
+  selector:
+    app: app
+  ports:
+    - port: 8080
+---
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: app
+spec:
+  default:
+    config:
+      type: HTTP
+      httpHealthCheck:
+        port: 8080
+        requestPath: /status/200
+    logConfig:
+      enabled: true
+  targetRef:
+    group: ""
+    kind: Service
+    name: app
+---
+apiVersion: networking.gke.io/v1
+kind: GCPBackendPolicy
+metadata:
+  name: app
+spec:
+  default:
+    securityPolicy: fastly-to-https-lb
+  targetRef:
+    group: ""
+    kind: Service
+    name: app

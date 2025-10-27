@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -e
+if [[ -n "$CI" ]]; then set -x; fi
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT="$(dirname $DIR)"
+
+source $DIR/configure-artifact-registry-auth
+
+if [[ -t 1 ]]; then
+    interactive='-it'
+else
+    interactive=''
+fi
+
+image=$(awk -F= '/org.opencontainers.image.name/ { print $2 }' < Dockerfile)
+image="${image}:testing"
+if [[ -n "$CI" ]]; then
+    opts='--cache-from type=gha --cache-to type=gha,mode=max'
+else
+    opts='--quiet'
+fi
+docker buildx build --output type=docker $opts $DOCKER_OPTS_PYPI_ZON \
+       --tag $image $ROOT
+docker run --rm ${interactive} \
+       --volume $ROOT/test_httpbin.py:/app/test_httpbin.py \
+       --entrypoint python \
+       $image test_httpbin.py "$@"

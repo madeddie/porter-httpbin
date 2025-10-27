@@ -1,0 +1,38 @@
+[project]
+name = "httpbin"
+version = "0.9.2+zon.8"
+description="HTTP Request and Response Service"
+urls = {repository="https://github.com/requests/httpbin"}
+authors = [{name="Kenneth Reitz", email="me@kennethreitz.org"}]
+license = {text="MIT"}
+
+dependencies = [
+    "Flask",
+    "MarkupSafe",
+    "brotlipy",
+    "decorator",
+    "flasgger",
+    "gevent",
+    "itsdangerous",
+    "raven[flask]",
+    "six",
+    "werkzeug>=2.1",
+]
+
+requires-python = ">= 3.13"
+
+[dependency-groups]
+deploy = ["gunicorn"]
+
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = ""
+
+[[tool.uv.index]]
+name = "pypi-zon"
+url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/simple/"
+default = true

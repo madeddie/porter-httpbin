@@ -8,6 +8,7 @@ This module provides the core HttpBin experience.
 """
 
 import base64
+import importlib.metadata
 import json
 import os
 import random
@@ -27,10 +28,9 @@ from flask import (
     abort,
 )
 from six.moves import range as xrange
-from werkzeug.datastructures import WWWAuthenticate, MultiDict
+from werkzeug.datastructures import Authorization, WWWAuthenticate, MultiDict
 from werkzeug.http import http_date
-from werkzeug.wrappers import BaseResponse
-from werkzeug.http import parse_authorization_header
+from werkzeug.wrappers import Response as BaseResponse
 from flasgger import Swagger, NO_SANITIZER
 
 from . import filters
@@ -52,10 +52,7 @@ from .helpers import (
 from .utils import weighted_choice
 from .structures import CaseInsensitiveDict
 
-with open(
-    os.path.join(os.path.realpath(os.path.dirname(__file__)), "VERSION")
-) as version_file:
-    version = version_file.read().strip()
+version = importlib.metadata.version('httpbin')
 
 ENV_COOKIES = (
     "_gauges_unique",
@@ -96,7 +93,7 @@ template = {
         "title": "httpbin.org",
         "description": (
             "A simple HTTP Request & Response Service."
-            "<br/> <br/> <b>Run locally: </b> <code>$ docker run -p 80:80 kennethreitz/httpbin</code>"
+            "<br/> <br/> <b>Run locally: </b> <code>$ docker run -p 8080:80 eu.gcr.io/zeitonline-210413/httpbin:0.9.2-head</code>"
         ),
         "contact": {
             "responsibleOrganization": "Kenneth Reitz",
@@ -379,10 +376,29 @@ def view_get():
     return jsonify(get_dict("url", "args", "headers", "origin"))
 
 
-@app.route("/anything", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE"])
+@app.route("/head", methods=("HEAD",))
+def view_head():
+    """The request's headers
+    ---
+    tags:
+      - HTTP Methods
+    produces:
+      - application/json
+    responses:
+      200:
+        description: Echoes the request's headers as response headers (with an X-Echo- prefix).
+    """
+
+    response = jsonify(get_dict("headers"))
+    for key, value in request.headers.items():
+        response.headers.add('X-Echo-%s' % key, value)
+    return response
+
+
+@app.route("/anything", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE", "PURGE"])
 @app.route(
     "/anything/<path:anything>",
-    methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE"],
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE", "PURGE"],
 )
 def view_anything(anything=None):
     """Returns anything passed in request data.
@@ -639,7 +655,7 @@ def redirect_to():
         status_code = int(args["status_code"])
         if status_code >= 300 and status_code < 400:
             response.status_code = status_code
-    response.headers["Location"] = args["url"].encode("utf-8")
+    response.headers["Location"] = args["url"]
 
     return response
 
@@ -802,22 +818,10 @@ def response_headers():
     # Pending swaggerUI update
     # https://github.com/swagger-api/swagger-ui/issues/3850
     headers = MultiDict(request.args.items(multi=True))
-    response = jsonify(list(headers.lists()))
-
-    while True:
-        original_data = response.data
-        d = {}
-        for key in response.headers.keys():
-            value = response.headers.get_all(key)
-            if len(value) == 1:
-                value = value[0]
-            d[key] = value
-        response = jsonify(d)
-        for key, value in headers.items(multi=True):
-            response.headers.add(key, value)
-        response_has_changed = response.data != original_data
-        if not response_has_changed:
-            break
+    response = Response(render_template("moby.html"))
+    response.headers.clear()  # Remove built-in content-type and -length
+    for key, value in headers.items(multi=True):
+        response.headers.add(key, value)
     return response
 
 
@@ -1139,7 +1143,7 @@ def digest_auth(
     authorization = request.headers.get("Authorization")
     credentials = None
     if authorization:
-        credentials = parse_authorization_header(authorization)
+        credentials = Authorization.from_header(authorization)
 
     if (
         not authorization
@@ -1287,7 +1291,7 @@ def drip():
     return response
 
 
-@app.route("/base64/<value>")
+@app.route("/base64/<value>", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "TRACE"])
 def decode_base64(value):
     """Decodes base64url-encoded string.
     ---

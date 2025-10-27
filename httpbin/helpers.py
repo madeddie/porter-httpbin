@@ -13,8 +13,7 @@ import re
 import time
 import os
 from hashlib import md5, sha256, sha512
-from werkzeug.http import parse_authorization_header
-from werkzeug.datastructures import WWWAuthenticate
+from werkzeug.datastructures import Authorization, WWWAuthenticate
 
 from flask import request, make_response
 from six.moves.urllib.parse import urlparse, urlunparse
@@ -23,7 +22,7 @@ from six.moves.urllib.parse import urlparse, urlunparse
 from .structures import CaseInsensitiveDict
 
 
-ASCII_ART = """
+ASCII_ART = r"""
     -=[ teapot ]=-
 
        _...._
@@ -68,7 +67,7 @@ ACCEPTED_MEDIA_TYPES = [
     'image/*'
 ]
 
-ANGRY_ASCII ="""
+ANGRY_ASCII = r"""
           .-''''''-.
         .' _      _ '.
        /   O      O   \\
@@ -356,7 +355,7 @@ def check_digest_auth(user, passwd):
     """Check user authentication using HTTP Digest auth"""
 
     if request.headers.get('Authorization'):
-        credentials = parse_authorization_header(request.headers.get('Authorization'))
+        credentials = Authorization.from_header(request.headers.get('Authorization'))
         if not credentials:
             return
         request_uri = request.script_root + request.path
@@ -435,7 +434,7 @@ def parse_multi_value_header(header_str):
     if header_str:
         parts = header_str.split(',')
         for part in parts:
-            match = re.search('\s*(W/)?\"?([^"]*)\"?\s*', part)
+            match = re.search(r'\s*(W/)?\"?([^"]*)\"?\s*', part)
             if match is not None:
                 parsed_parts.append(match.group(2))
     return parsed_parts
@@ -465,10 +464,15 @@ def digest_challenge_response(app, qop, algorithm, stale = False):
         os.urandom(10)
     ]), algorithm)
     opaque = H(os.urandom(10), algorithm)
+    qpop = ('auth', 'auth-int') if qop is None else (qop,)
 
-    auth = WWWAuthenticate("digest")
-    auth.set_digest('me@kennethreitz.com', nonce, opaque=opaque,
-                    qop=('auth', 'auth-int') if qop is None else (qop,), algorithm=algorithm)
-    auth.stale = stale
+    auth = WWWAuthenticate('digest', {
+        'realm': 'me@kennethreitz.com',
+        'nonce': nonce,
+        'opaque': opaque,
+        'qop': ','.join(qpop),
+        'algorithm': algorithm,
+        'stale': str(stale).upper(),
+    })
     response.headers['WWW-Authenticate'] = auth.to_header()
     return response
