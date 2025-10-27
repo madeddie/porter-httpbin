@@ -1,38 +1,53 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+pypi = "https://pypi.org/project/httpbin/"
+Repository = "https://github.com/psf/httpbin"
+
 [project]
 name = "httpbin"
-version = "0.9.2+zon.8"
-description="HTTP Request and Response Service"
-urls = {repository="https://github.com/requests/httpbin"}
-authors = [{name="Kenneth Reitz", email="me@kennethreitz.org"}]
-license = {text="MIT"}
-
+version = "0.10.2"
+requires-python = ">=3.8"
+description = "HTTP Request and Response Service"
+readme = "README.md"
+license = {text = "MIT or ISC"}
+authors = [
+    {name = "Kenneth Reitz", email = "me@kennethreitz.org"},
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "License :: OSI Approved :: ISC License (ISCL)",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
 dependencies = [
-    "Flask",
-    "MarkupSafe",
-    "brotlipy",
+    "brotlicffi",
     "decorator",
     "flasgger",
-    "gevent",
-    "itsdangerous",
-    "raven[flask]",
+    "flask >= 2.2.4",
+    'greenlet < 3.0; python_version<"3.12"',
+    'greenlet >= 3.0.0a1; python_version>="3.12.0rc0"',
+    'importlib-metadata; python_version<"3.8"',
     "six",
-    "werkzeug>=2.1",
+    "werkzeug >= 2.2.2",
 ]
 
-requires-python = ">= 3.13"
+[project.optional-dependencies]
+test = ["pytest", "tox"]
+mainapp = [
+    "gunicorn",
+    "gevent",
+]
 
-[dependency-groups]
-deploy = ["gunicorn"]
-
-
-[build-system]
-requires = ["uv_build"]
-build-backend = "uv_build"
-
-[tool.uv.build-backend]
-module-root = ""
-
-[[tool.uv.index]]
-name = "pypi-zon"
-url = "https://europe-west3-python.pkg.dev/zeitonline-engineering/pypi-zon/simple/"
-default = true
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["httpbin*"]

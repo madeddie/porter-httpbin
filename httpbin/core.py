@@ -27,10 +27,13 @@ from flask import (
     url_for,
     abort,
 )
-from six.moves import range as xrange
-from werkzeug.datastructures import Authorization, WWWAuthenticate, MultiDict
+from werkzeug.datastructures import WWWAuthenticate, MultiDict
 from werkzeug.http import http_date
-from werkzeug.wrappers import Response as BaseResponse
+try:
+    from werkzeug.wrappers import Response
+except ImportError:  # werkzeug < 2.1
+    from werkzeug.wrappers import BaseResponse as Response
+
 from flasgger import Swagger, NO_SANITIZER
 
 from . import filters
@@ -45,6 +48,7 @@ from .helpers import (
     H,
     ROBOT_TXT,
     ANGRY_ASCII,
+    parse_authorization_header,
     parse_multi_value_header,
     next_stale_after_value,
     digest_challenge_response,
@@ -52,7 +56,12 @@ from .helpers import (
 from .utils import weighted_choice
 from .structures import CaseInsensitiveDict
 
-version = importlib.metadata.version('httpbin')
+try:
+    from importlib.metadata import version as get_version
+except ImportError:
+    from importlib_metadata import version as get_version
+
+version = get_version("httpbin")
 
 ENV_COOKIES = (
     "_gauges_unique",
@@ -74,14 +83,14 @@ def jsonify(*args, **kwargs):
 
 
 # Prevent WSGI from correcting the casing of the Location header
-BaseResponse.autocorrect_location_header = False
+Response.autocorrect_location_header = False
 
 # Find the correct template folder when running from a different location
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 
 app = Flask(__name__, template_folder=tmpl_dir)
 app.debug = bool(os.environ.get("DEBUG"))
-app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
+app.json.compact = False
 
 app.add_template_global("HTTPBIN_TRACKING" in os.environ, name="tracking_enabled")
 
@@ -93,13 +102,15 @@ template = {
         "title": "httpbin.org",
         "description": (
             "A simple HTTP Request & Response Service."
-            "<br/> <br/> <b>Run locally: </b> <code>$ docker run -p 8080:80 eu.gcr.io/zeitonline-210413/httpbin:0.9.2-head</code>"
+            "<br/> A <a href='http://kennethreitz.com/'>Kenneth Reitz</a> project."
+            "<br/> <br/> <b>Run locally: </b> <br/> "
+            "<code>$ docker pull ghcr.io/psf/httpbin</code> <br/>"
+            "<code>$ docker run -p 80:8080 ghcr.io/psf/httpbin</code>"
         ),
         "contact": {
-            "responsibleOrganization": "Kenneth Reitz",
+            "responsibleOrganization": "Python Software Foundation",
             "responsibleDeveloper": "Kenneth Reitz",
-            "email": "me@kennethreitz.org",
-            "url": "https://kennethreitz.org",
+            "url": "https://github.com/psf/httpbin/",
         },
         # "termsOfService": "http://me.com/terms",
         "version": version,
@@ -646,9 +657,6 @@ def redirect_to():
     args_dict = request.args.items()
     args = CaseInsensitiveDict(args_dict)
 
-    # We need to build the response manually and convert to UTF-8 to prevent
-    # werkzeug from "fixing" the URL. This endpoint should set the Location
-    # header to the exact string supplied.
     response = app.make_response("")
     response.status_code = 302
     if "status_code" in args:
@@ -1274,7 +1282,7 @@ def drip():
     pause = duration / numbytes
 
     def generate_bytes():
-        for i in xrange(numbytes):
+        for i in range(numbytes):
             yield b"*"
             time.sleep(pause)
 
@@ -1449,7 +1457,7 @@ def random_bytes(n):
     response = make_response()
 
     # Note: can't just use os.urandom here because it ignores the seed
-    response.data = bytearray(random.randint(0, 255) for i in range(n))
+    response.data = bytes(random.randint(0, 255) for i in range(n))
     response.content_type = "application/octet-stream"
     return response
 
@@ -1484,7 +1492,7 @@ def stream_random_bytes(n):
     def generate_bytes():
         chunks = bytearray()
 
-        for i in xrange(n):
+        for i in range(n):
             chunks.append(random.randint(0, 255))
             if len(chunks) == chunk_size:
                 yield (bytes(chunks))
@@ -1538,8 +1546,8 @@ def range_request(numbytes):
 
     if (
         first_byte_pos > last_byte_pos
-        or first_byte_pos not in xrange(0, numbytes)
-        or last_byte_pos not in xrange(0, numbytes)
+        or first_byte_pos not in range(0, numbytes)
+        or last_byte_pos not in range(0, numbytes)
     ):
         response = Response(
             headers={
@@ -1555,7 +1563,7 @@ def range_request(numbytes):
     def generate_bytes():
         chunks = bytearray()
 
-        for i in xrange(first_byte_pos, last_byte_pos + 1):
+        for i in range(first_byte_pos, last_byte_pos + 1):
 
             # We don't want the resource to change across requests, so we need
             # to use a predictable data generation function
@@ -1612,7 +1620,7 @@ def link_page(n, offset):
     link = "<a href='{0}'>{1}</a> "
 
     html = ["<html><head><title>Links</title></head><body>"]
-    for i in xrange(n):
+    for i in range(n):
         if i == offset:
             html.append("{0} ".format(i))
         else:

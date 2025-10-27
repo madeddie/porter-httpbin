@@ -4,11 +4,10 @@ import os
 import base64
 import unittest
 import contextlib
-import six
 import json
 from werkzeug.http import parse_dict_header
 from hashlib import md5, sha256, sha512
-from six import BytesIO
+from io import BytesIO
 
 import httpbin
 from httpbin.helpers import parse_multi_value_header
@@ -145,10 +144,9 @@ class HttpbinTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data.decode('utf-8'))
         self.assertEqual(data['args'], {})
-        self.assertEqual(data['headers']['Host'], 'localhost')
         self.assertEqual(data['headers']['User-Agent'], 'test')
         # self.assertEqual(data['origin'], None)
-        self.assertEqual(data['url'], 'http://localhost/get')
+        self.assertRegex(data['url'], '^http://[^/]*/get$')
         self.assertTrue(response.data.endswith(b'\n'))
 
     def test_anything(self):
@@ -158,15 +156,14 @@ class HttpbinTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data.decode('utf-8'))
         self.assertEqual(data['args'], {})
-        self.assertEqual(data['headers']['Host'], 'localhost')
-        self.assertEqual(data['url'], 'http://localhost/anything/foo/bar')
+        self.assertRegex(data['url'], '^http://[^/]*/anything/foo/bar$')
         self.assertEqual(data['method'], 'GET')
         self.assertTrue(response.data.endswith(b'\n'))
 
     def test_base64(self):
         greeting = u'Здравствуй, мир!'
         b64_encoded = _string_to_base64(greeting)
-        response = self.app.get('/base64/' + b64_encoded.decode('ascii'))
+        response = self.app.get('/base64/' + b64_encoded.decode())
         content = response.data.decode('utf-8')
         self.assertEqual(greeting, content)
 
@@ -177,8 +174,8 @@ class HttpbinTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_post_body_text(self):
-        with open('httpbin/core.py') as f:
-            response = self.app.post('/post', data={"file": f.read()})
+        fake_contents = "this is some fake payload"
+        response = self.app.post('/post', data={"file": fake_contents})
         self.assertEqual(response.status_code, 200)
 
     def test_post_body_binary(self):
@@ -420,7 +417,7 @@ class HttpbinTestCase(unittest.TestCase):
                                                                      body, stale_after + 1)
         self.assertEqual(stale_response.status_code, 401)
         header = stale_response.headers.get('WWW-Authenticate')
-        self.assertIn('stale=TRUE', header)
+        self.assertIn('stale=true', header.lower())
 
     def _test_digest_response_for_auth_request(self, header, username, password, qop, uri, body, nc=1, nonce=None):
         auth_type, auth_info = header.split(None, 1)
@@ -472,13 +469,13 @@ class HttpbinTestCase(unittest.TestCase):
         wrong_pass_response, nonce = self._test_digest_response_for_auth_request(header, username, "wrongPassword", qop, uri, body)
         self.assertEqual(wrong_pass_response.status_code, 401)
         header = wrong_pass_response.headers.get('WWW-Authenticate')
-        self.assertNotIn('stale=TRUE', header)
+        self.assertNotIn('stale=true', header.lower())
 
         reused_nonce_response, nonce =  self._test_digest_response_for_auth_request(header, username, password, qop, uri, \
                                                                               body, nonce=nonce)
         self.assertEqual(reused_nonce_response.status_code, 401)
         header = reused_nonce_response.headers.get('WWW-Authenticate')
-        self.assertIn('stale=TRUE', header)
+        self.assertIn('stale=true', header.lower())
 
     def test_drip(self):
         response = self.app.get('/drip?numbytes=400&duration=2&delay=1')
@@ -505,17 +502,9 @@ class HttpbinTestCase(unittest.TestCase):
 
     def test_bytes_with_seed(self):
         response = self.app.get('/bytes/10?seed=0')
-        # The RNG changed in python3, so even though we are
-        # setting the seed, we can't expect the value to be the
-        # same across both interpreters.
-        if six.PY3:
-            self.assertEqual(
-                response.data, b'\xc5\xd7\x14\x84\xf8\xcf\x9b\xf4\xb7o'
-            )
-        else:
-            self.assertEqual(
-                response.data, b'\xd8\xc2kB\x82g\xc8Mz\x95'
-            )
+        self.assertEqual(
+            response.data, b'\xc5\xd7\x14\x84\xf8\xcf\x9b\xf4\xb7o'
+        )
 
     def test_stream_bytes(self):
         response = self.app.get('/stream-bytes/1024')
@@ -524,17 +513,9 @@ class HttpbinTestCase(unittest.TestCase):
 
     def test_stream_bytes_with_seed(self):
         response = self.app.get('/stream-bytes/10?seed=0')
-        # The RNG changed in python3, so even though we are
-        # setting the seed, we can't expect the value to be the
-        # same across both interpreters.
-        if six.PY3:
-            self.assertEqual(
-                response.data, b'\xc5\xd7\x14\x84\xf8\xcf\x9b\xf4\xb7o'
-            )
-        else:
-            self.assertEqual(
-                response.data, b'\xd8\xc2kB\x82g\xc8Mz\x95'
-            )
+        self.assertEqual(
+            response.data, b'\xc5\xd7\x14\x84\xf8\xcf\x9b\xf4\xb7o'
+        )
 
     def test_delete_endpoint_returns_body(self):
         response = self.app.delete(
@@ -556,25 +537,25 @@ class HttpbinTestCase(unittest.TestCase):
             'TRACE',
         ]
         for m in methods:
-            response = self.app.open(path='/status/418', method=m)
+            response = self.app.open('/status/418', method=m)
             self.assertEqual(response.status_code, 418)
 
     def test_status_endpoint_invalid_code(self):
-        response = self.app.get(path='/status/4!9')
+        response = self.app.get('/status/4!9')
         self.assertEqual(response.status_code, 400)
 
     def test_status_endpoint_invalid_codes(self):
-        response = self.app.get(path='/status/200,402,foo')
+        response = self.app.get('/status/200,402,foo')
         self.assertEqual(response.status_code, 400)
 
     def test_xml_endpoint(self):
-        response = self.app.get(path='/xml')
+        response = self.app.get('/xml')
         self.assertEqual(
             response.headers.get('Content-Type'), 'application/xml'
         )
 
     def test_x_forwarded_proto(self):
-        response = self.app.get(path='/get', headers={
+        response = self.app.get('/get', headers={
             'X-Forwarded-Proto':'https'
         })
         assert json.loads(response.data.decode('utf-8'))['url'].startswith('https://')
@@ -596,8 +577,8 @@ class HttpbinTestCase(unittest.TestCase):
 
     def test_redirect_absolute_param_n_higher_than_1(self):
         response = self.app.get('/redirect/5?absolute=true')
-        self.assertEqual(
-            response.headers.get('Location'), 'http://localhost/absolute-redirect/4'
+        self.assertRegex(
+            response.headers.get('Location'), '^http://[^/]*/absolute-redirect/4$'
         )
 
     def test_redirect_n_equals_to_1(self):
@@ -622,15 +603,15 @@ class HttpbinTestCase(unittest.TestCase):
 
     def test_absolute_redirect_n_higher_than_1(self):
         response = self.app.get('/absolute-redirect/5')
-        self.assertEqual(
-            response.headers.get('Location'), 'http://localhost/absolute-redirect/4'
+        self.assertRegex(
+            response.headers.get('Location'), '^http://[^/]*/absolute-redirect/4$'
         )
 
     def test_absolute_redirect_n_equals_to_1(self):
         response = self.app.get('/absolute-redirect/1')
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(
-            response.headers.get('Location'), 'http://localhost/get'
+        self.assertRegex(
+            response.headers.get('Location'), '^http://[^/]*/get$'
         )
 
     def test_request_range(self):
@@ -807,6 +788,3 @@ class HttpbinTestCase(unittest.TestCase):
         self.assertEqual(parse_multi_value_header('"xyzzy", "r2d2xxxx", "c3piozzzz"'), [ "xyzzy", "r2d2xxxx", "c3piozzzz" ])
         self.assertEqual(parse_multi_value_header('W/"xyzzy", W/"r2d2xxxx", W/"c3piozzzz"'), [ "xyzzy", "r2d2xxxx", "c3piozzzz" ])
         self.assertEqual(parse_multi_value_header('*'), [ "*" ])
-
-if __name__ == '__main__':
-    unittest.main()

@@ -1,32 +1,48 @@
-FROM python:3.14-slim@sha256:79eaa9622e4daa24b775ac2c9b6dc49b4f302ce925e3dcf1851782b9c93cf5f5 AS base
-LABEL org.opencontainers.image.name=europe-west3-docker.pkg.dev/zeitonline-engineering/docker-zon/httpbin
+FROM python:3.10-slim AS build
 
-COPY --from=ghcr.io/astral-sh/uv:0.9.5@sha256:f459f6f73a8c4ef5d69f4e6fbbdb8af751d6fa40ec34b39a1ab469acd6e289b7 /uv /usr/bin/
-ENV UV_NO_MANAGED_PYTHON=1 \
-    UV_NO_CACHE=1 \
-    UV_COMPILE_BYTECODE=1 \
-    UV_FROZEN=1 \
-    UV_INDEX_PYPI_ZON_USERNAME="oauth2accesstoken"
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
 
-WORKDIR /app
-RUN groupadd --gid=10000 app && \
-    useradd --uid=10000 --gid=app --no-user-group \
-    --create-home --home-dir /app app && \
-    chown -R app:app /app
-USER app
-RUN uv venv --allow-existing /app
-ENV PATH=/app/bin:$PATH \
-    UV_PROJECT_ENVIRONMENT=/app
+RUN apt-get -y update
+RUN apt-get install -y \
+    python3-pip \
+    python3-venv
 
-COPY pyproject.toml uv.lock ./
-COPY httpbin httpbin
-RUN --mount=type=secret,id=GCLOUD_TOKEN,env=UV_INDEX_PYPI_ZON_PASSWORD \
-    uv sync --group deploy
+RUN python3 -m venv /opt/httpbin
+RUN /opt/httpbin/bin/pip install -U pip
 
-ENTRYPOINT ["python", "-m", "gunicorn", "-b", "0.0.0.0:8080", "httpbin:app", "-k", "gevent"]
+ADD requirements.txt /requirements.txt
+RUN /opt/httpbin/bin/pip install --no-deps --requirement /requirements.txt
 
-# Security updates run last, to intentionally bust the docker cache.
-USER root
-RUN apt-get update && apt-get -y upgrade && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-USER app
+ADD . /httpbin
+RUN /opt/httpbin/bin/pip install --no-deps /httpbin
+
+
+# ----------------------------------------------------------------------------
+
+FROM python:3.10-slim AS prod
+
+ARG APP_VERSION
+LABEL name="httpbin"
+LABEL version=${APP_VERSION}
+LABEL description="A simple HTTP service."
+LABEL org.kennethreitz.vendor="Kenneth Reitz"
+
+RUN useradd \
+    --system \
+    --shell /bin/nologin \
+    --no-create-home \
+    --home /opt/httpbin \
+    httpbin
+
+COPY --from=build /opt/httpbin /opt/httpbin
+WORKDIR /opt/httpbin
+
+ADD httpbin.bash /opt/httpbin/bin
+RUN chmod +x /opt/httpbin/bin/httpbin.bash
+RUN chown --recursive httpbin /opt/httpbin
+EXPOSE 8080
+CMD ["/opt/httpbin/bin/httpbin.bash"]
+
+USER httpbin

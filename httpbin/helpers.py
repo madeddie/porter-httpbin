@@ -13,7 +13,14 @@ import re
 import time
 import os
 from hashlib import md5, sha256, sha512
-from werkzeug.datastructures import Authorization, WWWAuthenticate
+from werkzeug.datastructures import WWWAuthenticate
+from werkzeug.http import dump_header
+
+try:
+    from werkzeug.http import parse_authorization_header
+except ImportError: # werkzeug < 2.3
+    from werkzeug.datastructures import Authorization
+    parse_authorization_header = Authorization.from_header
 
 from flask import request, make_response
 from six.moves.urllib.parse import urlparse, urlunparse
@@ -466,13 +473,14 @@ def digest_challenge_response(app, qop, algorithm, stale = False):
     opaque = H(os.urandom(10), algorithm)
     qpop = ('auth', 'auth-int') if qop is None else (qop,)
 
-    auth = WWWAuthenticate('digest', {
+    values = {
         'realm': 'me@kennethreitz.com',
         'nonce': nonce,
         'opaque': opaque,
-        'qop': ','.join(qpop),
+        'qop': dump_header(('auth', 'auth-int') if qop is None else (qop,)),
         'algorithm': algorithm,
-        'stale': str(stale).upper(),
-    })
+        'stale': stale,
+    }
+    auth = WWWAuthenticate("digest", values=values)
     response.headers['WWW-Authenticate'] = auth.to_header()
     return response
